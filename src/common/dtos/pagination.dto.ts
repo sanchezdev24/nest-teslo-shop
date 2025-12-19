@@ -1,31 +1,36 @@
-import { ApiProperty } from '@nestjs/swagger';
-
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsOptional, IsPositive, Min } from 'class-validator';
+import { IsOptional, IsPositive, Min, IsIn } from 'class-validator';
 
 export class PaginationDto {
-  @ApiProperty({
+  @ApiPropertyOptional({
+    description: 'Número de productos a retornar por página',
+    example: 10,
     default: 10,
-    description: 'How many rows do you need',
+    minimum: 1,
   })
   @IsOptional()
   @IsPositive()
-  @Type(() => Number) // enableImplicitConversions: true
+  @Type(() => Number)
   limit?: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
+    description: 'Número de productos a saltar (para paginación)',
+    example: 0,
     default: 0,
-    description: 'How many rows do you want to skip',
+    minimum: 0,
   })
   @IsOptional()
   @Min(0)
-  @Type(() => Number) // enableImplicitConversions: true
+  @Type(() => Number)
   offset?: number;
 
-  @ApiProperty({
-    default: '',
-    description: 'Filter results by gender',
+  @ApiPropertyOptional({
+    description: 'Filtrar productos por género',
+    example: 'men',
+    enum: ['men', 'women', 'unisex', 'kid'],
   })
   @IsOptional()
-  gender: 'men' | 'women' | 'unisex' | 'kid';
+  @IsIn(['men', 'women', 'unisex', 'kid'])
+  gender?: 'men' | 'women' | 'unisex' | 'kid';
 }
